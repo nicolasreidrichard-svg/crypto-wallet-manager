@@ -1,0 +1,1 @@
+{"name": "crypto-wallet-manager","dependencies": {"ethers": "^5.7.0","dotenv": "^10.0.0","sqlite3": "^5.0.0"},"devDependencies": {"typescript": "^4.5.0","ts-node": "^10.0.0","jest": "^27.0.0","eslint": "^7.32.0"}}
