@@ -62,22 +62,33 @@ npm start
 
 ---
 
-## Why AI sessions disconnect — and how to continue on your own
+## Keeping context across sessions (important)
 
-Long AI-assistant sessions (7+ hours) hit a hard **context-window limit**: the
-model can only hold a certain number of words in memory at once. When that limit
-is reached, the session ends automatically. This is a platform constraint, not
-an error on your part.
+Every AI assistant session — on any platform — starts with zero memory of previous work.
+The fix is [`SESSION_CONTEXT.md`](./SESSION_CONTEXT.md), a file in this repository that
+acts as a persistent memory card.
 
-### Concrete steps to avoid losing progress next time
+**How to use it:**
 
-| Step | What to do |
-|------|-----------|
-| **1. Save your `.env` file early** | As soon as you get a key, paste it into your local `.env` immediately. Do not rely on the chat window to remember it. |
-| **2. Commit frequently** | After each working feature, run `git add . && git commit -m "describe what works"`. This saves your progress permanently. |
-| **3. Break work into small sessions** | Instead of one 7-hour session, do one task per session (e.g. "add Etherscan key", "test balance lookup"). Each session stays well within the context limit. |
-| **4. Write a short note at the end of each session** | Before closing, paste this template into a `NOTES.md` file: `Last working step: [describe]. Next step: [describe]. Blockers: [any errors].` |
-| **5. Start new sessions with context** | Begin each new AI session with: *"I am working on crypto-wallet-manager. Last time I completed [X]. Today I want to do [Y]. The repo is at [URL]."* This lets the assistant pick up exactly where you left off without needing to re-read everything. |
+1. At the start of any new session, paste this into the chat:
+   > *"Please read SESSION_CONTEXT.md in my repo before we start:
+   > https://github.com/nicolasreidrichard-svg/crypto-wallet-manager"*
+
+2. The assistant will read it and immediately know the project, what was last done,
+   what's next, and how you prefer to work — no re-explaining needed.
+
+3. At the end of each session, update the **Current Status** section of `SESSION_CONTEXT.md`
+   (what got done, what's next), then commit and push it.
+
+See [`SESSION_CONTEXT.md`](./SESSION_CONTEXT.md) for full details, including the
+working-preferences that apply to all sessions.
+
+### Why sessions disconnect
+
+Long sessions (7+ hours) hit a hard **context-window limit**: the model can only hold a
+certain number of words in memory at once. When the ceiling is reached, the session ends —
+this is a platform constraint, not anything you did wrong. The `SESSION_CONTEXT.md` workflow
+above means a disconnection costs you nothing — the next session picks up in seconds.
 
 ---
 
