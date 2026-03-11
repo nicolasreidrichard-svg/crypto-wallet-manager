@@ -1,9 +1,11 @@
 class PortfolioTracker {
+    private assets: Record<string, Record<string, number>>;
+
     constructor() {
         this.assets = {};
     }
 
-    addAsset(chain, token, amount) {
+    addAsset(chain: string, token: string, amount: number): void {
         if (!this.assets[chain]) {
             this.assets[chain] = {};
         }
@@ -13,8 +15,8 @@ class PortfolioTracker {
         this.assets[chain][token] += amount;
     }
 
-    getPortfolioSummary() {
-        let summary = {};
+    getPortfolioSummary(): Record<string, Record<string, number>> {
+        const summary: Record<string, Record<string, number>> = {};
         for (const chain in this.assets) {
             summary[chain] = {};
             for (const token in this.assets[chain]) {
