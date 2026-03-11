@@ -1,1 +1,26 @@
-{"name": "crypto-wallet-manager","dependencies": {"ethers": "^5.7.0","dotenv": "^10.0.0","sqlite3": "^5.0.0"},"devDependencies": {"typescript": "^4.5.0","ts-node": "^10.0.0","jest": "^27.0.0","eslint": "^7.32.0"}}
+{
+  "name": "crypto-wallet-manager",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "ethers": "^5.7.0",
+    "sqlite3": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "eslint": "^7.32.0",
+    "jest": "^27.0.0",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.5.0"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/__tests__/**/*.test.ts"
+    ]
+  }
+}
