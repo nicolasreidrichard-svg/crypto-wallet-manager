@@ -1,4 +1,5 @@
 import WalletManager from '../src/services/walletManager';
+import PortfolioTracker, { InsufficientBalanceError } from '../src/services/portfolioTracker';
 import { encrypt, decrypt } from '../src/utils/encryption';
 import { validatePrivateKey, validateAddress, validateChain, validateAmount } from '../src/utils/validation';
 import {
@@ -207,6 +208,88 @@ describe('validation utilities', () => {
 
         it('throws for non-numeric strings', () => {
             expect(() => validateAmount('abc')).toThrow();
+        });
+    });
+});
+
+// ── PortfolioTracker ──────────────────────────────────────────────────────────
+
+describe('PortfolioTracker', () => {
+    let tracker: PortfolioTracker;
+
+    beforeEach(() => {
+        tracker = new PortfolioTracker();
+    });
+
+    describe('addAsset / getPortfolioSummary', () => {
+        it('accumulates amounts for the same token', () => {
+            tracker.addAsset('ethereum', 'ETH', 1.5);
+            tracker.addAsset('ethereum', 'ETH', 0.5);
+            expect(tracker.getPortfolioSummary()).toEqual({ ethereum: { ETH: 2 } });
+        });
+
+        it('tracks multiple tokens across multiple chains', () => {
+            tracker.addAsset('ethereum', 'ETH', 1);
+            tracker.addAsset('ethereum', 'USDC', 500);
+            tracker.addAsset('polygon', 'MATIC', 200);
+            const summary = tracker.getPortfolioSummary();
+            expect(summary.ethereum.ETH).toBe(1);
+            expect(summary.ethereum.USDC).toBe(500);
+            expect(summary.polygon.MATIC).toBe(200);
+        });
+    });
+
+    describe('removeAsset', () => {
+        it('deducts the spent amount from the balance', () => {
+            tracker.addAsset('ethereum', 'ETH', 2);
+            tracker.removeAsset('ethereum', 'ETH', 0.5);
+            expect(tracker.getPortfolioSummary().ethereum.ETH).toBe(1.5);
+        });
+
+        it('allows removing the entire balance', () => {
+            tracker.addAsset('ethereum', 'ETH', 1);
+            tracker.removeAsset('ethereum', 'ETH', 1);
+            expect(tracker.getPortfolioSummary().ethereum.ETH).toBe(0);
+        });
+
+        it('throws InsufficientBalanceError when spending more than available', () => {
+            tracker.addAsset('ethereum', 'ETH', 0.1);
+            expect(() => tracker.removeAsset('ethereum', 'ETH', 1)).toThrow(InsufficientBalanceError);
+        });
+
+        it('throws InsufficientBalanceError when no balance exists for the token', () => {
+            expect(() => tracker.removeAsset('ethereum', 'ETH', 1)).toThrow(InsufficientBalanceError);
+        });
+    });
+
+    describe('setAssetPrice / getPortfolioValue', () => {
+        it('calculates total USD value using set prices', () => {
+            tracker.addAsset('ethereum', 'ETH', 1);
+            tracker.addAsset('ethereum', 'USDC', 500);
+            tracker.setAssetPrice('ETH', 3000);
+            tracker.setAssetPrice('USDC', 1);
+            expect(tracker.getPortfolioValue()).toBe(3500);
+        });
+
+        it('treats tokens without a set price as zero value', () => {
+            tracker.addAsset('ethereum', 'ETH', 10);
+            // no price set for ETH
+            expect(tracker.getPortfolioValue()).toBe(0);
+        });
+
+        it('aggregates value across multiple chains', () => {
+            tracker.addAsset('ethereum', 'ETH', 1);
+            tracker.addAsset('polygon', 'ETH', 1);
+            tracker.setAssetPrice('ETH', 2000);
+            expect(tracker.getPortfolioValue()).toBe(4000);
+        });
+
+        it('reflects updated value after spending (removeAsset)', () => {
+            tracker.addAsset('ethereum', 'ETH', 2);
+            tracker.setAssetPrice('ETH', 1000);
+            expect(tracker.getPortfolioValue()).toBe(2000);
+            tracker.removeAsset('ethereum', 'ETH', 0.5);
+            expect(tracker.getPortfolioValue()).toBe(1500);
         });
     });
 });
