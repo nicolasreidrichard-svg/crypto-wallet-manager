@@ -1,6 +1,6 @@
 class Database {
     // Database connection
-    private db: any;
+    private db: unknown;
 
     constructor() {
         this.connect();
@@ -12,32 +12,32 @@ class Database {
     }
 
     // Method to create wallet
-    public createWallet(walletData: any) {
+    public createWallet(_walletData: Record<string, unknown>) {
         // Logic to create wallet
     }
 
     // Method to get wallet
-    public getWallet(walletId: string) {
+    public getWallet(_walletId: string) {
         // Logic to get wallet
     }
 
     // Method to create asset
-    public createAsset(assetData: any) {
+    public createAsset(_assetData: Record<string, unknown>) {
         // Logic to create asset
     }
 
     // Method to get asset
-    public getAsset(assetId: string) {
+    public getAsset(_assetId: string) {
         // Logic to get asset
     }
 
     // Method to create transaction
-    public createTransaction(transactionData: any) {
+    public createTransaction(_transactionData: Record<string, unknown>) {
         // Logic to create transaction
     }
 
     // Method to get transaction
-    public getTransaction(transactionId: string) {
+    public getTransaction(_transactionId: string) {
         // Logic to get transaction
     }
 }
