@@ -8,7 +8,7 @@ import WalletManager from './services/walletManager';
 import PortfolioTracker from './services/portfolioTracker';
 import Logger from './utils/logger';
 
-async function main() {
+function main() {
     // ── Wallet Management ────────────────────────────────────────────────────
 
     const manager = new WalletManager();
@@ -59,7 +59,9 @@ async function main() {
     // }
 }
 
-main().catch((err) => {
-    Logger.error(err.message);
-    process.exit(1);
-});
+try {
+    main();
+} catch (err) {
+    Logger.error((err as Error).message);
+    Deno.exit(1);
+}

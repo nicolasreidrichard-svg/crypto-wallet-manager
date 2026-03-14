@@ -1,4 +1,5 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
+import { Buffer } from "node:buffer";
 import { EncryptionError } from '../errors/WalletError';
 
 const ALGORITHM = 'aes-256-gcm';

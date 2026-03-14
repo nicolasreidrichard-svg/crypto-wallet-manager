@@ -22,7 +22,7 @@ class PortfolioTracker {
     }
 }
 
-class CryptoWalletManager {
+export class CryptoWalletManager {
     walletManager: WalletManager;
     portfolioTracker: PortfolioTracker;
 
